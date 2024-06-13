@@ -1,3 +1,4 @@
+using System.Text;
 using BenchmarkDotNet.Attributes;
 
 namespace BenchmarkSimples;
@@ -8,25 +9,34 @@ public class VerificacaoStringExisteListaObjetosBenchmarks
     private readonly List<Pessoa> pessoas = [];
     private static readonly Random random = new Random();
 
+    [Params(100, 300, 1000, 2000, 10000)]
+    public int totalItensGerados;
+
     [GlobalSetup]
     public void GlobalSetup()
     {
-        for (int i = 0; i < 1000; i++)
-            pessoas.Add(new Pessoa(GerarNomeCompleto(), GerarDataNascimento(1900,2000)));
+        for (int i = 0; i < totalItensGerados; i++)
+            pessoas.Add(new Pessoa(GerarStringAleatoria(50), GerarDataNascimento(1900,2000)));
     }
 
     [Benchmark]
-    public bool VerificacaoUsandoCount() => pessoas.Count(pessoa => pessoa.Nome.Equals(pessoas[500].Nome)) > 0;
+    public bool VerificacaoUsandoCount() => pessoas.Count(pessoa => pessoa.Nome.Equals(pessoas[totalItensGerados/2].Nome)) > 0;
 
     [Benchmark]
-    public bool VerificacaoUsandoAny() => pessoas.Any(pessoa => pessoa.Nome.Equals(pessoas[500].Nome));
+    public bool VerificacaoUsandoAny() => pessoas.Any(pessoa => pessoa.Nome.Equals(pessoas[totalItensGerados/2].Nome));
 
-    private static string GerarNomeCompleto()
+    private static string GerarStringAleatoria(int tamanho)
     {
-        var nomes = new List<string> { "João", "Maria", "José", "Ana", "Pedro", "Mariana", "Carlos", "Isabela", "Antônio", "Laura" };
-        var sobrenomes = new List<string> { "Silva", "Santos", "Oliveira", "Souza", "Pereira", "Costa", "Sousa", "Ferreira", "Almeida", "Araújo" };
+        const string caracteresPermitidos = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
+        var sb = new StringBuilder();
 
-        return  $"{nomes[random.Next(nomes.Count)]} {sobrenomes[random.Next(sobrenomes.Count)]}";
+        for (int i = 0; i < tamanho; i++)
+        {
+            int indice = random.Next(caracteresPermitidos.Length);
+            sb.Append(caracteresPermitidos[indice]);
+        }
+
+        return sb.ToString();
     }
 
     private static DateTime GerarDataNascimento(int anoInicial, int anoFinal)

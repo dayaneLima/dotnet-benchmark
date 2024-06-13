@@ -1,4 +1,4 @@
-# BenchmarkSimples
+# Benchmark
 
 Este é um projeto de benchmarking simples para comparar o desempenho de diferentes métodos de verificação de strings em uma lista de objetos.
 
@@ -6,15 +6,33 @@ Este é um projeto de benchmarking simples para comparar o desempenho de diferen
 
 Neste projeto, comparamos duas abordagens para verificar se uma determinada string existe em uma lista de objetos `Pessoa`. 
 O objetivo é determinar qual método (`VerificacaoUsandoCount` ou `VerificacaoUsandoAny`) é mais eficiente em termos de desempenho.
+Ambos os benchmarks são executados sobre uma lista de 100, 300, 1000, 2000 e 10000 objetos `Pessoa`, preenchida aleatoriamente com nomes e datas de nascimento.
 
-## Configuração
+## Criação de um projeto do tipo console
 
-O projeto utiliza o framework de benchmarking `BenchmarkDotNet` para executar os testes de desempenho. Ele inclui duas classes de benchmark:
+No terminal, navegue até o diretório que deseja criar o projeto e execute o seguinte comando:
 
-- `VerificacaoUsandoCount`: Utiliza o método `Count` para verificar se a string existe na lista de pessoas.
-- `VerificacaoUsandoAny`: Utiliza o método `Any` para verificar se a string existe na lista de pessoas.
+```bash
+dotnet new console -n nomeProjeto
+```
 
-Ambos os benchmarks são executados sobre uma lista de 1000 objetos `Pessoa`, preenchida aleatoriamente com nomes e datas de nascimento.
+## Instalação da biblioteca de benchmark
+
+```bash
+dotnet add package BenchmarkDotNet
+```
+
+## Criação da classe para medição
+
+Crie uma classe com o que se deseja medir (Veja o exemplo do arquivo VerificacaoStringExisteListaObjetosBenchmarks.cs)
+
+## Chamada da classe do benchmark para execução
+
+No Program.cs adicione a linha abaixo:
+
+```bash
+BenchmarkRunner.Run<VerificacaoStringExisteListaObjetosBenchmarks>();
+```
 
 ## Como executar
 
